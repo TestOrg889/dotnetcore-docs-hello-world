@@ -1,4 +1,4 @@
-name: Deploy to Azure App Service using OIDC
+name: Deploy to Azure App Service
 
 on:
   push:
@@ -10,14 +10,14 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Azure Login (OIDC)
+      - name: Login to Azure using OIDC
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -27,13 +27,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.x'
+          dotnet-version: '7.x'  # or match your project version
 
-      - name: Publish app
-        run: dotnet publish -c Release -o publish
+      - name: Publish .NET app
+        run: dotnet publish -c Release -o ./publish
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          package: publish
+          package: ./publish
