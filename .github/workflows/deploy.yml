@@ -13,9 +13,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Show secret (base64 to bypass masking)
-        run: echo "${{ secrets.MY_SECRET }}" | base64
-
       - name: Checkout code
         uses: actions/checkout@v3
 
